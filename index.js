@@ -7,33 +7,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-
-// รายการ domain ที่อนุญาต
-// const allowedOrigins = [
-//   'https://watershop25.tsmiledev.com',
-//   'https://tsmiledev.com'
-// ];
-
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     // ถ้าไม่มี origin (เช่น curl, postman) หรือ origin อยู่ใน whitelist
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   }
-// };
-
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [
-      "https://tsmiledev.com",
-      "https://watershop25.tsmiledev.com"
-    ],
-    methods: ["GET", "POST"],
-    credentials: true
+    origin: "*"
   }
 });
 
