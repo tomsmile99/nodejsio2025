@@ -1,5 +1,6 @@
 const express = require('express');
-const http = require('http');
+// const http = require('http');
+const https = require('https');
 const { Server } = require('socket.io');
 const cors = require('cors');
 
@@ -7,12 +8,26 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const server = http.createServer(app);
+// const server = http.createServer(app);
+// const io = new Server(server, {
+//   cors: {
+//     origin: "*"
+//   }
+// });
+
+// โหลด SSL certificate (จาก Let's Encrypt หรือใบ cert ของคุณ)
+const server = https.createServer({
+  // key: fs.readFileSync('/path/to/privkey.pem'),
+  cert: fs.readFileSync('/ssl/Lets_Encrypt_nodeio25.tsmiledev.com.pem'),
+}, app);
+
 const io = new Server(server, {
   cors: {
-    origin: "*"
+    origin: 'https://watershop25.tsmiledev.com/', // หรือ '*'
+    methods: ['GET', 'POST']
   }
 });
+
 
 io.on('connection', (socket) => {
   console.log('🟢 Admin connected:', socket.id);
