@@ -17,8 +17,8 @@ app.use(express.json());
 
 // โหลด SSL certificate (จาก Let's Encrypt หรือใบ cert ของคุณ)
 const server = https.createServer({
-  // key: fs.readFileSync('/path/to/privkey.pem'),
-  cert: fs.readFileSync('/ssl/Lets_Encrypt_nodeio25.tsmiledev.com.pem'),
+  cert: fs.readFileSync('./ssl/Lets_Encrypt_nodeio25.tsmiledev.com.pem'),
+  key: fs.readFileSync('./ssl/private.key')
 }, app);
 
 const io = new Server(server, {
