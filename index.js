@@ -22,7 +22,7 @@ const server = https.createServer({
 }, app);
 const io = new Server(server, {
   cors: {
-    origin: 'https://watershop25.tsmiledev.com', // https://watershop25.tsmiledev.com หรือ '*'
+    origin: 'https://tsmiledev.com', // https://watershop25.tsmiledev.com หรือ '*'
     methods: ['GET', 'POST'],
     credentials: true
   }
@@ -30,7 +30,7 @@ const io = new Server(server, {
 
 
 
-app.get('/test', (req, res) => {
+app.get('/', (req, res) => {
   return res.status(200).json({
     message: 'Hello, World!',
     status: 'success'
