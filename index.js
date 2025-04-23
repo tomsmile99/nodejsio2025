@@ -1,8 +1,10 @@
 const express = require('express');
+//const http = require('http');
 const https = require('https');
+const { Server } = require('socket.io');
 
 const fs = require('fs');
-const WebSocket = require('ws');
+// const WebSocket = require('ws');
 
 
 const cors = require('cors');
@@ -11,18 +13,53 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
+
+// const server = http.createServer(app);
+// const wss = new WebSocket.Server({ server });
+
+//const server = http.createServer(app);
 const server = https.createServer({
-  key: fs.readFileSync('privkey.pem'),
-  cert: fs.readFileSync('cert.pem')
-}, (req, res) => {
-  res.writeHead(200);
-  res.end("HTTPS server is running");
+  cert: fs.readFileSync('cert.pem'),
+  key: fs.readFileSync('privkey.pem')
+}, app);
+const io = new Server(server, {
+  cors: {
+    origin: "*"
+  }
 });
-const wss = new WebSocket.Server({ server });
 
+// โหลด SSL certificate (จาก Let's Encrypt หรือใบ cert ของคุณ)
+// const server = https.createServer({
+//   cert: fs.readFileSync('./ssl/Lets_Encrypt_nodeio25.tsmiledev.com.pem'),
+//   key: fs.readFileSync('./ssl/private.key')
+// }, app);
 
-// let clients = []; // สำหรับเก็บ client ที่เชื่อมต่ออยู่
+// const io = new Server(server, {
+//   cors: {
+//     origin: 'https://watershop25.tsmiledev.com/', // หรือ '*'
+//     methods: ['GET', 'POST']
+//   }
+// });
 
+//let clients = []; // สำหรับเก็บ client ที่เชื่อมต่ออยู่
+
+// wss.on('connection', (ws,req) => {
+//   //console.log('🟢 Admin connected:', ws);
+//   console.log('✅ Client connected');
+
+//   // ถ้าอยากดู IP ที่เชื่อมต่อ:
+//   const ip = req.socket.remoteAddress;
+//   console.log('Client IP:', ip);
+
+//   // ทดสอบส่งข้อความกลับไป
+//   ws.send(JSON.stringify({ message: 'คุณเชื่อมต่อสำเร็จแล้ว!' }));
+
+//   // จำลองมี order เข้ามาหลัง 5 วินาที
+//   // setTimeout(() => {
+//   //   ws.send('new-order'); // ✅ ส่งข้อความไปยัง client
+//   // }, 5000);
+// });
 
 app.get('/test', (req, res) => {
   return res.status(200).json({
@@ -31,37 +68,37 @@ app.get('/test', (req, res) => {
   })
 });
 
-
-
-wss.on('connection', (ws) => {
-  console.log('Client connected to ws.yourdomain.com');
-  ws.send(JSON.stringify({ msg: 'เชื่อมต่อสำเร็จ!' }));
-});
+// app.post('/new-order', (req, res) => {
+//   //const order = req.body;
+//   //io.emit('new-order');
+//   res.status(200).send('มีการสั่งซื้อเข้ามาใหม่');
+//   ws.send('new-order')
+// });
 
 // รับการเชื่อมต่อจาก Frontend
-// wss.on('connection', (ws) => {
-//   console.log('Client connected');
-//   clients.push(ws);
+// เมื่อ client เชื่อมต่อ
+io.on('connection', (socket) => {
+  console.log('⚡ มีผู้เชื่อมต่อ:', socket.id);
 
-//   ws.on('close', () => {
-//     clients = clients.filter(client => client !== ws);
-//   });
-// });
+  // รับข้อความจาก client
+  socket.on('chat message', (msg) => {
+    console.log('📩 ข้อความที่รับ:', msg);
+
+    // ส่งข้อความกลับไปให้ทุกคน
+    io.emit('chat message', msg);
+  });
+
+  // เมื่อ client ตัดการเชื่อมต่อ
+  socket.on('disconnect', () => {
+    console.log('❌ ผู้ใช้ตัดการเชื่อมต่อ:', socket.id);
+  });
+});
 
 // รับ API POST จาก CodeIgniter
 app.post('/new-order', (req, res) => {
   //const order = req.body;
-  console.log('รับออเดอร์จาก CI4');
-  // ส่งต่อไปยังทุก client ที่เชื่อมต่ออยู่
-  clients.forEach(client => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify({
-        type: 'new-order'
-      }));
-    }
-  });
-
-  res.json({ status: 'sent to clients' });
+  io.emit('new-order');
+  res.status(200).send('Order broadcasted');
 });
 
 
