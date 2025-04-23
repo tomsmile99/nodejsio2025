@@ -18,11 +18,11 @@ app.use(express.json());
 // const server = http.createServer(app);
 // const wss = new WebSocket.Server({ server });
 
-const server = https.createServer(app);
-// const server = http.createServer({
-//   cert: fs.readFileSync('/ssl/cert.pem'),
-//   key: fs.readFileSync('/ssl/privkey.pem')
-// }, app);
+// const server = https.createServer(app);
+const server = https.createServer({
+  cert: fs.readFileSync('/ssl/cert.pem'),
+  key: fs.readFileSync('/ssl/privkey.pem')
+}, app);
 const io = new Server(server, {
   cors: {
     origin: 'https://watershop25.tsmiledev.com', // หรือ '*'
