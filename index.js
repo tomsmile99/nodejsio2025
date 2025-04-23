@@ -25,8 +25,9 @@ const server = https.createServer(app);
 // }, app);
 const io = new Server(server, {
   cors: {
-    origin: '*', // หรือ '*'
-    methods: ['GET', 'POST']
+    origin: 'https://watershop25.tsmiledev.com', // หรือ '*'
+    methods: ['GET', 'POST'],
+    credentials: true
   }
 });
 
