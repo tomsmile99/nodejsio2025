@@ -21,7 +21,7 @@ const server = https.createServer({
 const wss = new WebSocket.Server({ server });
 
 
-let clients = []; // สำหรับเก็บ client ที่เชื่อมต่ออยู่
+// let clients = []; // สำหรับเก็บ client ที่เชื่อมต่ออยู่
 
 
 app.get('/test', (req, res) => {
@@ -32,15 +32,21 @@ app.get('/test', (req, res) => {
 });
 
 
-// รับการเชื่อมต่อจาก Frontend
-wss.on('connection', (ws) => {
-  console.log('Client connected');
-  clients.push(ws);
 
-  ws.on('close', () => {
-    clients = clients.filter(client => client !== ws);
-  });
+wss.on('connection', (ws) => {
+  console.log('Client connected to ws.yourdomain.com');
+  ws.send(JSON.stringify({ msg: 'เชื่อมต่อสำเร็จ!' }));
 });
+
+// รับการเชื่อมต่อจาก Frontend
+// wss.on('connection', (ws) => {
+//   console.log('Client connected');
+//   clients.push(ws);
+
+//   ws.on('close', () => {
+//     clients = clients.filter(client => client !== ws);
+//   });
+// });
 
 // รับ API POST จาก CodeIgniter
 app.post('/new-order', (req, res) => {
