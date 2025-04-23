@@ -1,9 +1,9 @@
 const express = require('express');
-//const http = require('http');
-const https = require('https');
+const http = require('http');
+//const https = require('https');
 const { Server } = require('socket.io');
 
-const fs = require('fs');
+//const fs = require('fs');
 // const WebSocket = require('ws');
 
 
@@ -15,11 +15,14 @@ app.use(express.json());
 
 
 
-//const server = http.createServer(app);
-const server = https.createServer({
-  cert: fs.readFileSync('/ssl/cert.pem'),
-  key: fs.readFileSync('/ssl/privkey.pem')
-}, app);
+// const server = http.createServer(app);
+// const wss = new WebSocket.Server({ server });
+
+const server = http.createServer(app);
+// const server = https.createServer({
+//   cert: fs.readFileSync('/ssl/cert.pem'),
+//   key: fs.readFileSync('/ssl/privkey.pem')
+// }, app);
 const io = new Server(server, {
   cors: {
     origin: '*', // https://watershop25.tsmiledev.com หรือ '*'
@@ -28,6 +31,18 @@ const io = new Server(server, {
   }
 });
 
+// โหลด SSL certificate (จาก Let's Encrypt หรือใบ cert ของคุณ)
+// const server = https.createServer({
+//   cert: fs.readFileSync('./ssl/Lets_Encrypt_nodeio25.tsmiledev.com.pem'),
+//   key: fs.readFileSync('./ssl/private.key')
+// }, app);
+
+// const io = new Server(server, {
+//   cors: {
+//     origin: 'https://watershop25.tsmiledev.com/', // หรือ '*'
+//     methods: ['GET', 'POST']
+//   }
+// });
 
 
 app.get('/test', (req, res) => {
@@ -36,6 +51,7 @@ app.get('/test', (req, res) => {
     status: 'success'
   })
 });
+
 
 
 // รับการเชื่อมต่อจาก Frontend
