@@ -22,7 +22,7 @@ const server = https.createServer({
 }, app);
 const io = new Server(server, {
   cors: {
-    origin: '*', // https://watershop25.tsmiledev.com หรือ '*'
+    origin: 'https://watershop25.tsmiledev.com', // https://watershop25.tsmiledev.com หรือ '*'
     methods: ['GET', 'POST'],
     credentials: true
   }
