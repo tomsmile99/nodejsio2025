@@ -1,9 +1,9 @@
 const express = require('express');
-const http = require('http');
-//const https = require('https');
+//const http = require('http');
+const https = require('https');
 const { Server } = require('socket.io');
 
-//const fs = require('fs');
+const fs = require('fs');
 // const WebSocket = require('ws');
 
 
@@ -18,11 +18,11 @@ app.use(express.json());
 // const server = http.createServer(app);
 // const wss = new WebSocket.Server({ server });
 
-const server = http.createServer(app);
-// const server = https.createServer({
-//   cert: fs.readFileSync('cert.pem'),
-//   key: fs.readFileSync('privkey.pem')
-// }, app);
+//const server = http.createServer(app);
+const server = https.createServer({
+  cert: fs.readFileSync('/ssl/cert.pem'),
+  key: fs.readFileSync('/ssl/privkey.pem')
+}, app);
 const io = new Server(server, {
   cors: {
     origin: '*', // หรือ '*'
