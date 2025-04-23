@@ -22,7 +22,7 @@ const server = https.createServer({
 }, app);
 const io = new Server(server, {
   cors: {
-    origin: 'https://tsmiledev.com', // https://watershop25.tsmiledev.com หรือ '*'
+    origin: 'https://watershop25.tsmiledev.com', // https://watershop25.tsmiledev.com หรือ '*'
     methods: ['GET', 'POST'],
     credentials: true
   }
@@ -65,6 +65,6 @@ app.post('/new-order', (req, res) => {
 });
 
 
-server.listen(443, () => {
-  console.log('✅ WebSocket server running on port 443');
+server.listen(4001, () => {
+  console.log('✅ WebSocket server running on port 4001');
 });
