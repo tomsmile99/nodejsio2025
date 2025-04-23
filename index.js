@@ -25,7 +25,8 @@ const server = https.createServer({
 }, app);
 const io = new Server(server, {
   cors: {
-    origin: "*"
+    origin: 'https://watershop25.tsmiledev.com/', // หรือ '*'
+    methods: ['GET', 'POST']
   }
 });
 
@@ -42,24 +43,6 @@ const io = new Server(server, {
 //   }
 // });
 
-//let clients = []; // สำหรับเก็บ client ที่เชื่อมต่ออยู่
-
-// wss.on('connection', (ws,req) => {
-//   //console.log('🟢 Admin connected:', ws);
-//   console.log('✅ Client connected');
-
-//   // ถ้าอยากดู IP ที่เชื่อมต่อ:
-//   const ip = req.socket.remoteAddress;
-//   console.log('Client IP:', ip);
-
-//   // ทดสอบส่งข้อความกลับไป
-//   ws.send(JSON.stringify({ message: 'คุณเชื่อมต่อสำเร็จแล้ว!' }));
-
-//   // จำลองมี order เข้ามาหลัง 5 วินาที
-//   // setTimeout(() => {
-//   //   ws.send('new-order'); // ✅ ส่งข้อความไปยัง client
-//   // }, 5000);
-// });
 
 app.get('/test', (req, res) => {
   return res.status(200).json({
@@ -68,12 +51,7 @@ app.get('/test', (req, res) => {
   })
 });
 
-// app.post('/new-order', (req, res) => {
-//   //const order = req.body;
-//   //io.emit('new-order');
-//   res.status(200).send('มีการสั่งซื้อเข้ามาใหม่');
-//   ws.send('new-order')
-// });
+
 
 // รับการเชื่อมต่อจาก Frontend
 // เมื่อ client เชื่อมต่อ
