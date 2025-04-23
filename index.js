@@ -11,10 +11,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-
 const server = https.createServer({
-  key: fs.readFileSync('./ssl/private.key'),
-  cert: fs.readFileSync('./ssl/cert.pem')
+  key: fs.readFileSync('privkey.pem'),
+  cert: fs.readFileSync('cert.pem')
 }, (req, res) => {
   res.writeHead(200);
   res.end("HTTPS server is running");
